@@ -8,7 +8,7 @@ import './styles.css';
 
 export default class Login extends Component {
     componentDidMount = () => {
-        localStorage.setItem("userId", null);
+        localStorage.setItem("userId", '');
     }
 
     state = {
