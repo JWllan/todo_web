@@ -11,10 +11,9 @@ export default class Todos extends Component {
 
     componentDidMount = () => {
         const userId = localStorage.getItem("userId");
-        if(userId == null) {
+        if (userId === '') {
             this.setState({ logado: false });
         }
-
     }
 
     render() {
