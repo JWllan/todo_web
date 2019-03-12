@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import api from '../../serices/todoApi';
+import api from '../../sevices/todoApi';
 
 import './styles.css';
 
