@@ -7,6 +7,13 @@ import api from '../../sevices/todoApi';
 import './styles.css';
 
 export default class Cadastro extends Component {
+    componentDidMount = () => {
+        const userId = localStorage.getItem("userId");
+        if (userId !== '') {
+            this.setState({ logado: true });
+        }
+    }
+
     state = {
         name: "",
         surname: "",
@@ -14,7 +21,8 @@ export default class Cadastro extends Component {
         password: "",
         age: 0,
         gender: "",
-        finalizado: false
+        finalizado: false,
+        logado: false
     };
 
     handleSubmit = async (event) => {
@@ -41,7 +49,10 @@ export default class Cadastro extends Component {
     }
 
     render() {
-        if (this.state.finalizado === true) {
+        if (this.state.logado === true) {
+          return <Redirect to={`/todos`} />
+        }
+        else if (this.state.finalizado === true) {
           return <Redirect to={`/todos`} />
         }
         else {
