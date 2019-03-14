@@ -16,18 +16,18 @@ export default class Todos extends Component {
 
     componentDidMount = async () => {
         const userId = localStorage.getItem("userId");
-        if (userId === '') {
-            this.setState({ logado: false });
-        }
-        else {
-            this.bindData(userId);
-        }
+        (userId === '') ? this.logout() : this.bindData(userId);
+    }
+
+    logout = () => {
+        localStorage.setItem("userId", '');
+        this.setState({ logado: false });
     }
 
     bindData = async (userId) => {
         let user = await api.get(`/users/${userId}`);
         this.setState({ user: user.data });
-        let todos = await api.get(`/todos/${userId}`);
+        let todos = await api.get(`/todos?userId=${userId}`);
 
         this.setState({ todos: todos.data });
     }
@@ -40,15 +40,17 @@ export default class Todos extends Component {
             return (
                 <div>
                     <label>Olá, {this.state.user.name}. </label>
-                    <Link to={`/login`}>Sair</Link>
+                    <input type="button" onClick={this.logout} value="Sair" />
                     <ul>
                         {this.state.todos.map(todo => (
                             <li key={todo._id}>
-                                <strong>{todo.description}</strong>
+                                <Link to={`/todo-details/${todo._id}`}>
+                                    <strong>{todo.description} </strong>
+                                </Link>
+                                <input type="button" onClick={this.logout} value="Excluir" />
                             </li>
                         ))}
                     </ul>
-                    <h1>Todos!</h1>
                 </div>
             )
         }
