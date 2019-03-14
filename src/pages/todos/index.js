@@ -7,7 +7,6 @@ import api from '../../sevices/todoApi';
 import './styles.css';
 
 export default class Todos extends Component {
-    
     state = {
         loged: true,
         user: {},
@@ -21,7 +20,7 @@ export default class Todos extends Component {
 
     logout = () => {
         localStorage.setItem("userId", '');
-        this.setState({ logado: false });
+        this.setState({ loged: false });
     }
 
     bindData = async (userId) => {
@@ -30,6 +29,17 @@ export default class Todos extends Component {
         let todos = await api.get(`/todos?userId=${userId}`);
 
         this.setState({ todos: todos.data });
+    }
+
+    deleteTodo = async (id) => {
+        let todo = await api.get(`/todos/${id}`);
+        if (todo.data.userId === this.userId) {
+            await api.delete(`/todos/${id}`);
+            this.bindData(this.userId);
+        }
+        else {
+            alert("Não autorizado");
+        }
     }
 
     render() {
@@ -45,9 +55,11 @@ export default class Todos extends Component {
                         {this.state.todos.map(todo => (
                             <li key={todo._id}>
                                 <Link to={`/todo-details/${todo._id}`}>
-                                    <strong>{todo.description} </strong>
+                                    <strong>{todo.title} </strong>
+                                    <br />
+                                    <label>{todo.description} </label>
                                 </Link>
-                                <input type="button" onClick={this.logout} value="Excluir" />
+                                <input type="button" onClick={this.deleteTodo(todo._id)} value="Excluir" />
                             </li>
                         ))}
                     </ul>
