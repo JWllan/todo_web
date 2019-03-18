@@ -6,34 +6,31 @@ import api from '../../../sevices/todoApi';
 
 import './styles.css';
 
-export default class TodoDetails extends Component {
+export default class TodoCreate extends Component {
     state = {
         loged: true,
-        todo: {},
+        todo: {
+            title: '',
+            description: '',
+            userId: 0
+        },
         unauthorized: false,
         finalizado: false
     };
 
     componentDidMount() {
-        const { id } = this.props.match.params;
-
         const userId = localStorage.getItem("userId");
-        (userId === '') ? this.logout() : this.bindData(id, userId);
+        if (userId === '') { this.logout(); }
+        else {
+            let todo = this.state.todo;
+            todo.userId = userId;
+            this.setState({ todo: todo });
+        }
     }
 
     logout = () => {
         localStorage.setItem("userId", '');
         this.setState({ loged: false });
-    }
-
-    bindData = async (id, userId) => {
-        let todo = await api.get(`/todos/${id}`);
-        if (todo.data.userId === userId) {
-            this.setState({ todo: todo.data });
-        }
-        else {
-            this.setState({ unauthorized: true });
-        }
     }
 
     handleSubmit = async (event) => {
@@ -43,10 +40,10 @@ export default class TodoDetails extends Component {
             userId: this.state.todo.userId
         };
 
-        const response = await api.put(`/todos/${this.state.todo._id}`, body);
+        const response = await api.post(`/todos`, body);
         
         if (!response.data) {
-            alert("Erro ao tentar encontrar a tarefa.");
+            alert("Erro ao tentar adicionar a tarefa.");
         }
         else {
             this.setState({ finalizado: true });
@@ -70,10 +67,6 @@ export default class TodoDetails extends Component {
         else {
             return (
                 <div>
-                    <Link to={`/todos`}>
-                        <input type="button" value="Voltar" />
-                    </Link>
-                    <br />
                     <label>
                         Título:
                         <textarea onChange={this.onChange_title} value={this.state.todo.title} />

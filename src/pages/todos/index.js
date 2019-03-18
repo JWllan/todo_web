@@ -32,10 +32,11 @@ export default class Todos extends Component {
     }
 
     deleteTodo = async (id) => {
+        let userId = localStorage.getItem("userId");
         let todo = await api.get(`/todos/${id}`);
-        if (todo.data.userId === this.userId) {
+        if (todo.data.userId === userId) {
             await api.delete(`/todos/${id}`);
-            this.bindData(this.userId);
+            this.bindData(userId);
         }
         else {
             alert("Não autorizado");
@@ -59,10 +60,14 @@ export default class Todos extends Component {
                                     <br />
                                     <label>{todo.description} </label>
                                 </Link>
-                                <input type="button" onClick={this.deleteTodo(todo._id)} value="Excluir" />
+                                <input type="button" onClick={() => this.deleteTodo(todo._id)} value="Excluir" />
                             </li>
                         ))}
                     </ul>
+                    <br />
+                    <Link to={`/todo-create`}>
+                        <input type="button" value="Adicionar" />
+                    </Link>
                 </div>
             )
         }
