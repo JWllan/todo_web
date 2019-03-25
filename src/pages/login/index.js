@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import api from '../../sevices/todoApi';
 
-import './styles.css';
+import './styles.scss';
 
 export default class Login extends Component {
     componentDidMount = () => {
@@ -42,15 +42,22 @@ export default class Login extends Component {
         }
         else {
             return (
-                <div>
+                <div className="main-login">
                     <form>
-                        <input type="text" onChange={this.onChange_login} value={this.state.login} placeholder="Login" />
-                        <br />
-                        <input type="password" onChange={this.onChange_senha} value={this.state.senha} placeholder="Senha" />
-                        <br />
-                        <input type="button" onClick={this.handleSubmit} value="Entrar" />
-                        <br />
-                        <Link to={`/singup`}>Cadastrar-me</Link>
+                        <div className="inputs">
+                            <input type="text" onChange={this.onChange_login} value={this.state.login} placeholder="Login" />
+                            <span></span>
+                        </div>
+                        <div className="inputs">
+                            <input type="password" onChange={this.onChange_senha} value={this.state.senha} placeholder="Senha" />
+                            <span></span>
+                        </div>
+                        <div className="buttons">
+                            <button onClick={this.handleSubmit}>Entrar</button>
+                        </div>
+                        <div>
+                            <Link to={`/singup`}>Cadastrar-me</Link>
+                        </div>
                     </form>
                 </div>
             );

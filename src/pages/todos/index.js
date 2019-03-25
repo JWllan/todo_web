@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import api from '../../sevices/todoApi';
 
-import './styles.css';
+import './styles.scss';
 
 export default class Todos extends Component {
     state = {
@@ -50,8 +50,13 @@ export default class Todos extends Component {
         else {
             return (
                 <div>
-                    <label>Olá, {this.state.user.name}. </label>
-                    <input type="button" onClick={this.logout} value="Sair" />
+                    <div>
+                        <label>Olá, {this.state.user.name}. </label>
+                        <div className="buttons">
+                            <button onClick={this.logout}>Sair</button>
+                        </div>
+                    </div>
+
                     <ul>
                         {this.state.todos.map(todo => (
                             <li key={todo._id}>
@@ -64,6 +69,7 @@ export default class Todos extends Component {
                             </li>
                         ))}
                     </ul>
+
                     <br />
                     <Link to={`/todo-create`}>
                         <input type="button" value="Adicionar" />
