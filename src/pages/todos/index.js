@@ -7,7 +7,6 @@ import api from '../../sevices/todoApi';
 import './styles.css';
 
 export default class Todos extends Component {
-    
     state = {
         loged: true,
         user: {},
@@ -16,20 +15,32 @@ export default class Todos extends Component {
 
     componentDidMount = async () => {
         const userId = localStorage.getItem("userId");
-        if (userId === '') {
-            this.setState({ logado: false });
-        }
-        else {
-            this.bindData(userId);
-        }
+        (userId === '') ? this.logout() : this.bindData(userId);
+    }
+
+    logout = () => {
+        localStorage.setItem("userId", '');
+        this.setState({ loged: false });
     }
 
     bindData = async (userId) => {
         let user = await api.get(`/users/${userId}`);
         this.setState({ user: user.data });
-        let todos = await api.get(`/todos/${userId}`);
+        let todos = await api.get(`/todos?userId=${userId}`);
 
         this.setState({ todos: todos.data });
+    }
+
+    deleteTodo = async (id) => {
+        let userId = localStorage.getItem("userId");
+        let todo = await api.get(`/todos/${id}`);
+        if (todo.data.userId === userId) {
+            await api.delete(`/todos/${id}`);
+            this.bindData(userId);
+        }
+        else {
+            alert("Não autorizado");
+        }
     }
 
     render() {
@@ -40,15 +51,23 @@ export default class Todos extends Component {
             return (
                 <div>
                     <label>Olá, {this.state.user.name}. </label>
-                    <Link to={`/login`}>Sair</Link>
+                    <input type="button" onClick={this.logout} value="Sair" />
                     <ul>
                         {this.state.todos.map(todo => (
                             <li key={todo._id}>
-                                <strong>{todo.description}</strong>
+                                <Link to={`/todo-details/${todo._id}`}>
+                                    <strong>{todo.title} </strong>
+                                    <br />
+                                    <label>{todo.description} </label>
+                                </Link>
+                                <input type="button" onClick={() => this.deleteTodo(todo._id)} value="Excluir" />
                             </li>
                         ))}
                     </ul>
-                    <h1>Todos!</h1>
+                    <br />
+                    <Link to={`/todo-create`}>
+                        <input type="button" value="Adicionar" />
+                    </Link>
                 </div>
             )
         }

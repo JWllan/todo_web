@@ -8,7 +8,10 @@ import './styles.css';
 
 export default class Login extends Component {
     componentDidMount = () => {
-        localStorage.setItem("userId", '');
+        const userId = localStorage.getItem("userId");
+        if (userId !== '') {
+            this.setState({ logado: true });
+        }
     }
 
     state = {
