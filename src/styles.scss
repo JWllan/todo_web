@@ -38,6 +38,7 @@ html, body {
         text-align: center;
 		padding-bottom: 4px;
 		z-index: 1;
+		background: linear-gradient( to right, #fcfbc5, #948b8b);
         &:focus + span {
 			opacity: 1;
 			transform: scale(1);
